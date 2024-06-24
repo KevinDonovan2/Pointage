@@ -9,14 +9,8 @@ public class CalendrierTravail {
 
     public static List<JourCalendaire> genererCalendrierJuin(boolean estGardien) {
         List<JourCalendaire> calendrier = new ArrayList<>();
-        LocalDate debutMois = LocalDate.of(2024, 6, 1); // Ajustement pour juin 2024
+        LocalDate debutMois = LocalDate.of(2024, 6, 1);
         LocalDate finMois = debutMois.plusMonths(1).minusDays(1);
-
-        DayOfWeek jourDebut = DayOfWeek.MONDAY;
-        DayOfWeek jourFin = DayOfWeek.FRIDAY; // Pour les employés normaux
-        if (estGardien) {
-            jourFin = DayOfWeek.SUNDAY; // Pour les gardiens
-        }
 
         for (LocalDate date = debutMois; date.isBefore(finMois.plusDays(1)); date = date.plusDays(1)) {
             boolean estJourFerie = false;
@@ -25,17 +19,29 @@ public class CalendrierTravail {
             // Vérifier si c'est un jour férié
             if (date.getDayOfMonth() == 17 || date.getDayOfMonth() == 25 || date.getDayOfMonth() == 26) {
                 estJourFerie = true;
+                estJourTravail = false; // Jour férié, donc pas de travail
             } else {
-                // Vérifier si c'est un jour de repos
+                // Vérifier si c'est un jour de repos (pour les employés normaux)
                 DayOfWeek jourCourant = date.getDayOfWeek();
-                if (!jourDebut.equals(jourCourant) && !jourFin.equals(jourCourant)) {
+                if (!estGardien && (jourCourant == DayOfWeek.SATURDAY || jourCourant == DayOfWeek.SUNDAY)) {
                     estJourTravail = false;
                 }
             }
 
-            calendrier.add(new JourCalendaire(date, estJourFerie, estJourTravail));
+            int heuresTravailJour = estJourTravail && !estJourFerie ? 8 : 0;
+            int heuresTravailNuit = estGardien && estJourTravail && !estJourFerie ? 8 : 0;
+
+            calendrier.add(new JourCalendaire(date, estJourFerie, estJourTravail, heuresTravailJour, heuresTravailNuit));
         }
 
         return calendrier;
+    }
+
+    public static int calculerHeuresTravailJour(List<JourCalendaire> calendrier) {
+        return calendrier.stream().mapToInt(JourCalendaire::getHeuresTravailJour).sum();
+    }
+
+    public static int calculerHeuresTravailNuit(List<JourCalendaire> calendrier) {
+        return calendrier.stream().mapToInt(JourCalendaire::getHeuresTravailNuit).sum();
     }
 }
