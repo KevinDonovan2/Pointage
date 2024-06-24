@@ -1,8 +1,7 @@
 package shool.hei.Pointage;
 
-import lombok.Setter;
-
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +14,7 @@ public class Employe {
     private LocalDate dateFinContrat;
     private double salaireBrut;
     private Categorie categorie;
+    private double salaireNet;
     private final List<Pointage> pointages;
 
     public Employe(String nom, String prenom, String numeroMatricule, LocalDate dateDeNaissance, LocalDate dateEmbauche, LocalDate dateFinContrat, double salaireBrut, Categorie categorie) {
@@ -26,10 +26,10 @@ public class Employe {
         this.dateFinContrat = dateFinContrat;
         this.salaireBrut = salaireBrut;
         this.categorie = categorie;
+        this.salaireNet = categorie.calculerSalaireNet(salaireBrut);
         this.pointages = new ArrayList<>();
     }
 
-    // Getters et setters
     public String getNom() {
         return nom;
     }
@@ -88,6 +88,14 @@ public class Employe {
 
     public void setCategorie(Categorie categorie) {
         this.categorie = categorie;
+    }
+
+    public double getSalaireNet() {
+        return salaireNet;
+    }
+
+    public void setSalaireNet(double salaireNet) {
+        this.salaireNet = salaireNet;
     }
 
     public List<Pointage> getPointages() {

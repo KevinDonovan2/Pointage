@@ -4,14 +4,15 @@ public class Categorie {
     private String nom;
     private int heuresNormalesParSemaine;
     private double salaireNormalParSemaine;
+    private TypeCategorie type;
 
-    public Categorie(String nom, int heuresNormalesParSemaine, double salaireNormalParSemaine) {
+    public Categorie(String nom, int heuresNormalesParSemaine, double salaireNormalParSemaine, TypeCategorie type) {
         this.nom = nom;
         this.heuresNormalesParSemaine = heuresNormalesParSemaine;
         this.salaireNormalParSemaine = salaireNormalParSemaine;
+        this.type = type;
     }
 
-    // Getters et setters
     public String getNom() {
         return nom;
     }
@@ -34,5 +35,21 @@ public class Categorie {
 
     public void setSalaireNormalParSemaine(double salaireNormalParSemaine) {
         this.salaireNormalParSemaine = salaireNormalParSemaine;
+    }
+
+    public TypeCategorie getType() {
+        return type;
+    }
+
+    public void setType(TypeCategorie type) {
+        this.type = type;
+    }
+
+    public double calculerSalaireNet(double salaireBrut) {
+        if (type == TypeCategorie.CADRE_SUP) {
+            return salaireBrut;
+        } else {
+            return salaireBrut - (salaireBrut * 0.20);
+        }
     }
 }
